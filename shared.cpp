@@ -102,18 +102,6 @@ void test(unsigned long count)
         }
         assert(count == n);
     });
-
-    measure("= = =", [count]() {
-        unsigned long n = 0;
-        for (auto i = 0; i < count; ++i) {
-            T ptr{ new int(1) };
-            T a = ptr;
-            T b = a;
-            T c = b;
-            n += *c;
-        }
-        assert(count == n);
-    });
 }
 
 
@@ -194,6 +182,24 @@ int main(int argc, char *argv[])
         for (auto i = 0; i < count; ++i) {
             shared_ptr<int> ptr { new int(1) };
             test_byref(n, ptr);
+        }
+        assert(count == n);
+    });
+
+    measure("shared_ptr (make_shared) byval", [count]() {
+        unsigned long n = 0;
+        for (auto i = 0; i < count; ++i) {
+            shared_ptr<int> ptr = make_shared<int>(1);
+            test_byval(n, ptr);
+        }
+        assert(count == n);
+    });
+
+    measure("shared_ptr (new) byval", [count]() {
+        unsigned long n = 0;
+        for (auto i = 0; i < count; ++i) {
+            shared_ptr<int> ptr { new int(1) };
+            test_byval(n, ptr);
         }
         assert(count == n);
     });
